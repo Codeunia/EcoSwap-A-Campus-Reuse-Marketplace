@@ -1,4 +1,3 @@
-// pages/AuthPage.jsx
 import { useState } from "react";
 import Login from "../components/Login";
 import Register from "../components/Register";
@@ -8,10 +7,10 @@ export default function AuthPage() {
   const [mode, setMode] = useState("login");
 
   return (
-    <div className="relative w-screen h-screen bg-gradient-to-br from-blue-200 via-white to-purple-200 flex items-center justify-center overflow-hidden">
+    <div className="relative w-screen h-screen bg-gradient-to-br from-green-300 via-white to-green-200 flex items-center justify-center overflow-hidden">
       {/* Animated Circle */}
       <motion.div
-        className="absolute bg-blue-500 rounded-full blur-3xl opacity-30 z-0"
+        className="absolute bg-green-500 rounded-full blur-3xl opacity-30 z-0"
         animate={
           mode === "register"
             ? { width: 300, height: 300, bottom: 40, right: 40 }
