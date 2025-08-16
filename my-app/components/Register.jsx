@@ -3,11 +3,17 @@ import { useState } from "react";
 import { RiUserLine, RiAdminLine, RiMailLine, RiPhoneLine, RiLockLine, RiEyeLine, RiEyeOffLine } from "react-icons/ri";
 import Link from "next/link"; 
 import axios from "axios"; 
+import { useRouter } from "next/navigation"; 
+import toast from "react-hot-toast";  
+import { useAuth } from "../context/AuthContext";
 
 export default function RegisterForm() {
+  const router = useRouter(); 
   const [accountType, setAccountType] = useState("user");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { login } = useAuth(); 
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -38,8 +44,18 @@ export default function RegisterForm() {
         accountType,
       });
       setMessage(response.data.message);
+      toast.success("User registered successfully 🎉");
+      login(accountType); 
+
+      if (accountType === "user") {
+        router.push("/home");  // home
+      } else {
+        router.push("/dashboard");  // admin dashboard
+      }
+
     } catch (error) {
       setMessage(error.response?.data?.message || "Something went wrong");
+      toast.error("Registration failed");
     }
   };
 
@@ -314,60 +330,3 @@ export default function RegisterForm() {
     </div>
   );
 }
-
-
-// "use client";
-// import { useState } from "react";
-// import axios from "axios";
-
-// export default function Register() {
-//   const [formData, setFormData] = useState({
-//     firstName: "",
-//     lastName: "",
-//     email: "",
-//     college: "",
-//     phone: "",
-//     password: "",
-//     confirmPassword: "",
-//     acceptTerms: false,
-//     accountType: "user",
-//   });
-//   const [message, setMessage] = useState("");
-
-//   const handleChange = (e) => {
-//     const { name, value, type, checked } = e.target;
-//     setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
-//   };
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     try {
-//       const res = await axios.post("/api/register", formData);
-//       setMessage(res.data.message);
-//     } catch (err) {
-//       setMessage(err.response?.data?.message || "Something went wrong");
-//     }
-//   };
-
-//   return (
-//     <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-lg shadow max-w-md w-full">
-//       <input name="firstName" placeholder="First Name" onChange={handleChange} className="border p-2 w-full" />
-//       <input name="lastName" placeholder="Last Name" onChange={handleChange} className="border p-2 w-full" />
-//       <input name="email" placeholder="Email" onChange={handleChange} className="border p-2 w-full" />
-//       <input name="college" placeholder="College" onChange={handleChange} className="border p-2 w-full" />
-//       <input name="phone" placeholder="Phone" onChange={handleChange} className="border p-2 w-full" />
-//       <input name="password" type="password" placeholder="Password" onChange={handleChange} className="border p-2 w-full" />
-//       <input name="confirmPassword" type="password" placeholder="Confirm Password" onChange={handleChange} className="border p-2 w-full" />
-//       <label className="flex items-center space-x-2">
-//         <input type="checkbox" name="acceptTerms" onChange={handleChange} />
-//         <span>Accept Terms</span>
-//       </label>
-//       <select name="accountType" onChange={handleChange} className="border p-2 w-full">
-//         <option value="user">User</option>
-//         <option value="admin">Admin</option>
-//       </select>
-//       <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded w-full">Register</button>
-//       <p className="text-center text-sm text-red-500">{message}</p>
-//     </form>
-//   );
-// }
