@@ -1,0 +1,52 @@
+import { connectDB } from "../../../lib/mongodb.js";
+import User from "../../../models/User.js";
+import bcrypt from "bcryptjs";
+
+export async function POST(req) {
+  try {
+    const {
+      firstName,
+      lastName,
+      email,
+      college,
+      phone,
+      password,
+      confirmPassword,
+      acceptTerms,
+      accountType,
+    } = await req.json();
+
+    await connectDB();
+
+    if (!acceptTerms) {
+      return new Response(JSON.stringify({ message: "You must accept terms" }), { status: 400 });
+    }
+    if (password !== confirmPassword) {
+      return new Response(JSON.stringify({ message: "Passwords do not match" }), { status: 400 });
+    }
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return new Response(JSON.stringify({ message: "Email already registered" }), { status: 400 });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = new User({
+      firstName,
+      lastName,
+      email,
+      college,
+      phone,
+      password: hashedPassword,
+      accountType,
+    });
+
+    await newUser.save();
+
+    return new Response(JSON.stringify({ message: "User registered successfully" }), { status: 201 });
+  } catch (err) {
+    console.error("❌ Error in register API:", err);
+    return new Response(JSON.stringify({ message: "Server error" }), { status: 500 });
+  }
+}
