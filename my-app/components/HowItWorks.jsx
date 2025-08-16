@@ -1,5 +1,6 @@
 import { IoMailOutline, IoCameraOutline, IoSearchOutline } from "react-icons/io5";
 import { FaHandshake } from "react-icons/fa";
+
 const HowItWorks = () => {
 
 const steps = [
