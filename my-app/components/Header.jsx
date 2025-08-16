@@ -1,13 +1,39 @@
+"use client";
+
+import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { LuRecycle } from "react-icons/lu";
+import { useAuth } from "../context/AuthContext";
 
-const Header = ({ isLoggedIn, setIsLoggedIn, setShowLogin }) => {
-  const handleProtectedClick = (e) => {
+export default function Header() {
+  const { isLoggedIn, accountType, logout } = useAuth();
+  const [showMenu, setShowMenu] = useState(false);
+  const router = useRouter();
+  const menuRef = useRef(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setShowMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleProtectedClick = (e, path) => {
     if (!isLoggedIn) {
       e.preventDefault();
       toast.error("Please log in to access this page.");
+      router.push("/login");
+      return;
     }
+    router.push(path);
   };
 
   return (
@@ -15,78 +41,87 @@ const Header = ({ isLoggedIn, setIsLoggedIn, setShowLogin }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div className="flex items-center">
-            <button
-              onClick={() => setShowLogin(true)}
-              className="flex items-center space-x-2"
-            >
-              <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
-                <LuRecycle className="text-white" />
-              </div>
-              <span className="font-['Pacifico'] text-2xl text-green-600">
-                EcoSwap
-              </span>
-            </button>
+          <div
+            className="flex items-center cursor-pointer"
+            onClick={() => router.push("/home")}
+          >
+            <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
+              <LuRecycle className="text-white" />
+            </div>
+            <span className="ml-2 font-['Pacifico'] text-2xl text-green-600">
+              EcoSwap
+            </span>
           </div>
 
           {/* Nav */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link
-              href={isLoggedIn ? "/browse-items" : "/"}
-              onClick={handleProtectedClick}
-              className="text-gray-700 hover:text-green-600 transition-colors whitespace-nowrap"
+            <button
+              onClick={(e) => handleProtectedClick(e, "/browse-items")}
+              className="text-gray-700 hover:text-green-600 transition-colors"
             >
               Browse Items
-            </Link>
-            <Link
-              href={isLoggedIn ? "/categories" : "/"}
-              onClick={handleProtectedClick}
-              className="text-gray-700 hover:text-green-600 transition-colors whitespace-nowrap"
+            </button>
+            <button
+              onClick={(e) => handleProtectedClick(e, "/categories")}
+              className="text-gray-700 hover:text-green-600 transition-colors"
             >
               Categories
-            </Link>
-            <Link
-              href={isLoggedIn ? "/how-it-works" : "/"}
-              onClick={handleProtectedClick}
-              className="text-gray-700 hover:text-green-600 transition-colors whitespace-nowrap"
+            </button>
+            <button
+              onClick={(e) => handleProtectedClick(e, "/how-it-works")}
+              className="text-gray-700 hover:text-green-600 transition-colors"
             >
               How It Works
-            </Link>
+            </button>
           </nav>
 
-          {/* Auth Buttons */}
-          <div className="hidden md:flex items-center space-x-4">
+          {/* Auth / Profile */}
+          <div className="hidden md:flex items-center space-x-4 relative">
             {!isLoggedIn ? (
               <>
-                <Link href="/login"
-                  onClick={() => setShowLogin(true)}
-                  className="text-gray-700 hover:text-green-600 transition-colors whitespace-nowrap"
+                <Link
+                  href="/login"
+                  className="text-gray-700 hover:text-green-600 transition-colors"
                 >
                   Login
                 </Link>
-                <Link href="/"
-                  onClick={() => setShowLogin(true)}
-                  className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors whitespace-nowrap cursor-pointer"
+                <Link
+                  href="/"
+                  className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
                 >
                   Sign Up
                 </Link>
               </>
             ) : (
-              <button
-                onClick={() => {
-                  setIsLoggedIn(false);
-                  toast.success("Logged out successfully");
-                }}
-                className="text-red-600 hover:text-red-800 transition-colors whitespace-nowrap"
-              >
-                Logout
-              </button>
+              <div ref={menuRef} className="relative">
+                {/* Circle Avatar */}
+                <div
+                  className="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center cursor-pointer"
+                  onClick={() => setShowMenu((prev) => !prev)}
+                >
+                  {accountType?.charAt(0).toUpperCase() || "U"}
+                </div>
+
+                {/* Dropdown */}
+                {showMenu && (
+                  <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg">
+                    <button
+                      onClick={() => {
+                        logout();
+                        toast.success("Logged out successfully");
+                        router.push("/");
+                      }}
+                      className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100 rounded-lg"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </div>
       </div>
     </header>
   );
-};
-
-export default Header;
+}
