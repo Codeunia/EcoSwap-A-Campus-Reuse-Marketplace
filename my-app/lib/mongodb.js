@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
-  throw new Error("❌ Please add MONGODB_URI in your .env file");
+  throw new Error("Please add MONGODB_URI in your .env file");
 }
 
 let isConnected = false;

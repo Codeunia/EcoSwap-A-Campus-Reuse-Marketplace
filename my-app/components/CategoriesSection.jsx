@@ -70,7 +70,7 @@ const CategoriesSection = () => {
         {/* Categories Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {categories.map((cat, idx) => (
-            <a key={idx} className="cursor-pointer" href={cat.href}>
+            <a key={idx} className="cursor-pointer" href={`/categories/${cat.name.toLowerCase()}`}>
               <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
                 <div className="relative h-48 overflow-hidden">
                   <img

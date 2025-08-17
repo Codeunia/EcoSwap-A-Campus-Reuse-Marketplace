@@ -141,7 +141,7 @@ const PostItem = () => {
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
                   >
                     <option value="">Select a category</option>
-                    <option value="books">Books</option>
+                    <option value="textbooks">Textbooks</option>
                     <option value="electronics">Electronics</option>
                     <option value="clothes">Clothes</option>
                     <option value="furniture">Furniture</option>
@@ -160,8 +160,8 @@ const PostItem = () => {
                   >
                     <option value="">Select condition</option>
                     <option value="new">New</option>
-                    <option value="like new">Like New</option>
-                    <option value="used">Used</option>
+                    <option value="used">used</option>
+                    <option value="fair">Fair</option>
                   </select>
                 </div>
 
