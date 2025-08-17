@@ -21,11 +21,10 @@ const categories = [
     description:
       "Academic books, study guides, reference materials, and course-specific textbooks",
     tags: ["Engineering", "Business", "Science", "+3 more"],
-    image:
-      "https://readdy.ai/api/search-image?query=Stack%20of%20colorful%20college%20textbooks%20and%20academic%20books&width=400&height=300&orientation=landscape",
+    image: "/books.jpg",
     icon: <FaBookOpen className="text-green-600 text-xl" />,
     items: "2,450 items",
-    link: "/browse?category=textbooks",
+    link: "/browse-items",
   },
   {
     name: "Electronics",
@@ -33,20 +32,20 @@ const categories = [
       "Laptops, tablets, phones, calculators, and other electronic gadgets",
     tags: ["Laptops", "Mobiles", "Calculators", "+5 more"],
     image:
-      "https://readdy.ai/api/search-image?query=Laptop%20and%20gadgets%20on%20a%20table&width=400&height=300&orientation=landscape",
+      "/electronics.jpg",
     icon: <FaLaptop className="text-green-600 text-xl" />,
     items: "1,980 items",
-    link: "/browse?category=electronics",
+    link: "/browse-items",
   },
   {
     name: "Furniture",
     description: "Desks, chairs, shelves, and dorm furniture essentials",
     tags: ["Desks", "Chairs", "Shelves", "+4 more"],
     image:
-      "https://readdy.ai/api/search-image?query=modern%20minimalist%20study%20desk%20with%20books&width=400&height=300&orientation=landscape",
+      "/furniture.jpg",
     icon: <FaCouch className="text-green-600 text-xl" />,
     items: "860 items",
-    link: "/browse?category=furniture",
+    link: "/browse-items",
   },
   {
     name: "Clothing",
@@ -54,50 +53,50 @@ const categories = [
       "Casual wear, formal attire, and accessories for students",
     tags: ["Shirts", "Jackets", "Shoes", "+6 more"],
     image:
-      "https://readdy.ai/api/search-image?query=clothing%20rack%20with%20student%20fashion&width=400&height=300&orientation=landscape",
+      "/clothing.jpg",
     icon: <FaTshirt className="text-green-600 text-xl" />,
     items: "3,120 items",
-    link: "/browse?category=clothing",
+    link: "/browse-items",
   },
   {
     name: "Sports Equipment",
     description: "Gear for indoor and outdoor sports activities",
     tags: ["Football", "Badminton", "Gym", "+2 more"],
     image:
-      "https://readdy.ai/api/search-image?query=sports%20equipment%20collection&width=400&height=300&orientation=landscape",
+      "/sports.jpg",
     icon: <FaFutbol className="text-green-600 text-xl" />,
     items: "780 items",
-    link: "/browse?category=sports",
+    link: "/browse-items",
   },
   {
     name: "Kitchen Items",
     description: "Utensils, cookware, and appliances for student kitchens",
     tags: ["Plates", "Pans", "Cups", "+5 more"],
     image:
-      "https://readdy.ai/api/search-image?query=kitchen%20items%20student%20dorm&width=400&height=300&orientation=landscape",
+      "/kitchen.jpg",
     icon: <FaUtensils className="text-green-600 text-xl" />,
     items: "1,420 items",
-    link: "/browse?category=kitchen",
+    link: "/browse-items",
   },
   {
     name: "Stationery",
     description: "Notebooks, pens, art supplies, and other study tools",
     tags: ["Notebooks", "Pens", "Art", "+4 more"],
     image:
-      "https://readdy.ai/api/search-image?query=stationery%20flatlay%20student&width=400&height=300&orientation=landscape",
+      "/calculus.jpg",
     icon: <FaPenFancy className="text-green-600 text-xl" />,
     items: "2,890 items",
-    link: "/browse?category=stationery",
+    link: "/browse-items",
   },
   {
     name: "Home Decor",
     description: "Posters, plants, and decorative items for dorm rooms",
     tags: ["Posters", "Plants", "Lights", "+3 more"],
     image:
-      "https://readdy.ai/api/search-image?query=student%20dorm%20home%20decor&width=400&height=300&orientation=landscape",
+      "/basketball.jpg",
     icon: <FaHome className="text-green-600 text-xl" />,
     items: "950 items",
-    link: "/browse?category=decor",
+    link: "/browse-items",
   },
 ];
 
