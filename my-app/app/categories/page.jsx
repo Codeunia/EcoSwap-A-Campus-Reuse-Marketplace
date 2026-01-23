@@ -14,6 +14,7 @@ import {
   FaExchangeAlt,
   FaLeaf,
 } from "react-icons/fa";
+import Link from "next/link";
 
 const categories = [
   {
@@ -23,8 +24,7 @@ const categories = [
     tags: ["Engineering", "Business", "Science", "+3 more"],
     image: "/books.jpg",
     icon: <FaBookOpen className="text-green-600 text-xl" />,
-    items: "2,450 items",
-    link: "/browse-items",
+    items: "2,450 items"
   },
   {
     name: "Electronics",
@@ -34,8 +34,7 @@ const categories = [
     image:
       "/electronics.jpg",
     icon: <FaLaptop className="text-green-600 text-xl" />,
-    items: "1,980 items",
-    link: "/browse-items",
+    items: "1,980 items"
   },
   {
     name: "Furniture",
@@ -44,8 +43,7 @@ const categories = [
     image:
       "/furniture.jpg",
     icon: <FaCouch className="text-green-600 text-xl" />,
-    items: "860 items",
-    link: "/browse-items",
+    items: "860 items"
   },
   {
     name: "Clothing",
@@ -55,8 +53,7 @@ const categories = [
     image:
       "/clothing.jpg",
     icon: <FaTshirt className="text-green-600 text-xl" />,
-    items: "3,120 items",
-    link: "/browse-items",
+    items: "3,120 items"
   },
   {
     name: "Sports Equipment",
@@ -65,8 +62,7 @@ const categories = [
     image:
       "/sports.jpg",
     icon: <FaFutbol className="text-green-600 text-xl" />,
-    items: "780 items",
-    link: "/browse-items",
+    items: "780 items"
   },
   {
     name: "Kitchen Items",
@@ -75,8 +71,7 @@ const categories = [
     image:
       "/kitchen.jpg",
     icon: <FaUtensils className="text-green-600 text-xl" />,
-    items: "1,420 items",
-    link: "/browse-items",
+    items: "1,420 items"
   },
   {
     name: "Stationery",
@@ -85,8 +80,7 @@ const categories = [
     image:
       "/calculus.jpg",
     icon: <FaPenFancy className="text-green-600 text-xl" />,
-    items: "2,890 items",
-    link: "/browse-items",
+    items: "2,890 items"
   },
   {
     name: "Home Decor",
@@ -95,8 +89,7 @@ const categories = [
     image:
       "/basketball.jpg",
     icon: <FaHome className="text-green-600 text-xl" />,
-    items: "950 items",
-    link: "/browse-items",
+    items: "950 items"
   },
 ];
 
@@ -120,10 +113,10 @@ const CategoriesPage = () => {
           {/* Category Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {categories.map((cat, index) => (
-              <a
+              <Link
                 key={index}
                 className="cursor-pointer"
-                href={cat.link}
+                href={`/browse-items?category=${cat.name.toLowerCase()}`}
               >
                 <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group h-full">
                   <div className="relative h-48 overflow-hidden">
@@ -177,7 +170,7 @@ const CategoriesPage = () => {
                     </div>
                   </div>
                 </div>
-              </a>
+              </Link>
             ))}
           </div>
 

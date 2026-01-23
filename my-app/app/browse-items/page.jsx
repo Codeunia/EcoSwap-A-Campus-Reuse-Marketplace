@@ -1,9 +1,11 @@
 "use client";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Search, Grid, List, User } from "lucide-react";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
+import { useSearchParams } from "next/navigation";
 
 // Filter options
 const categories = [
@@ -93,6 +95,18 @@ const filteredItems = items
     return 0;
   });
 
+  const searchParams = useSearchParams();
+  const categoryFromURL = searchParams.get("category");
+
+  useEffect(() => {
+    if (categoryFromURL) {
+      setSelectedCategory(
+        categories.find(
+          (c) => c.toLowerCase() === categoryFromURL.toLowerCase()
+        ) || ""
+      );
+    }
+  }, [categoryFromURL]);
 
   return (
     <>
@@ -295,10 +309,11 @@ const filteredItems = items
                           : "Swap";
 
                       return (
+                        <Link href={`/categories/${item.category.toLowerCase()}/${item._id}`} key={item._id}>
                         <div
                           key={item._id}
-                          className="border border-gray-200 rounded-xl hover:shadow-lg transition-all duration-300 overflow-hidden group"
-                        >
+                          className="border border-gray-200 rounded-xl hover:shadow-lg transition-all duration-300 overflow-hidden group">
+                  
                           <div className="relative h-48 overflow-hidden">
                             {item.photos?.[0] ? (
                               <img
@@ -361,6 +376,7 @@ const filteredItems = items
                             </div>
                           </div>
                         </div>
+                        </Link>
                       );
                     })}
                   </div>

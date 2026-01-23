@@ -12,42 +12,42 @@ const CategoriesSection = () => {
   const categories = [
     {
       name: "Textbooks",
-      href: "/category/textbooks",
+      href: "/browse-items",
       img: "/books.jpg",  
       icon: <IoBookOutline className="text-green-600 text-xl" />,
       items: "2,450",
     },
     {
       name: "Electronics",
-      href: "/category/electronics",
+      href: "/browse-items",
       img: "/electronics.jpg",
       icon: <IoPhonePortraitOutline className="text-green-600 text-xl" />,
       items: "1,800",
     },
     {
       name: "Furniture",
-      href: "/category/furniture",
+      href: "/browse-items",
       img: "/furniture.jpg",
       icon: <IoHomeOutline className="text-green-600 text-xl" />,
       items: "950",
     },
     {
       name: "Clothing",
-      href: "/category/clothing",
+      href: "/browse-items",
       img: "/clothing.jpg",
       icon: <IoShirtOutline className="text-green-600 text-xl" />,
       items: "3,200",
     },
     {
       name: "Sports Equipment",
-      href: "/category/sports",
+      href: "/browse-items",
       img: "/sports.jpg",
       icon: <IoBasketballOutline className="text-green-600 text-xl" />,
       items: "500",
     },
     {
       name: "Kitchen Items",
-      href: "/category/kitchen",
+      href: "/browse-items",
       img: "/kitchen.jpg",
       icon: <IoRestaurantOutline className="text-green-600 text-xl" />,
       items: "1,100",
@@ -70,7 +70,7 @@ const CategoriesSection = () => {
         {/* Categories Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {categories.map((cat, idx) => (
-            <a key={idx} className="cursor-pointer" href={`/categories/${cat.name.toLowerCase()}`}>
+            <a key={idx} className="cursor-pointer" href="/browse-items">
               <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
                 <div className="relative h-48 overflow-hidden">
                   <img
