@@ -43,9 +43,9 @@ export default function RegisterForm() {
         ...formData,
         accountType,
       });
+      login(response.data.user);
       setMessage(response.data.message);
       toast.success("User registered successfully 🎉");
-      login(accountType); 
 
       if (accountType === "user") {
         router.push("/home");  // home

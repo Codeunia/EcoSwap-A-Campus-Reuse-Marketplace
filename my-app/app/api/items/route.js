@@ -15,7 +15,8 @@ export async function POST(req) {
       type,
       price,
       contactMethod,
-      meetingLocation = "",
+      email,
+      phone,
       availability = "flexible",
       photos = [],
     } = body;
@@ -26,9 +27,14 @@ export async function POST(req) {
       category,
       condition,
       type,
-      price,
+
+      price: type === "sell" ? price : null,
+
       contactMethod,
-      meetingLocation,
+
+      email: contactMethod === "email" ? email : null,
+      phone: contactMethod === "phone" ? phone : null,
+
       availability,
       photos,
     });
@@ -39,13 +45,16 @@ export async function POST(req) {
       { message: "Item posted successfully", item: newItem },
       { status: 201 }
     );
-  } catch (err) {
+  } 
+  catch (err) {
+    // console.error(err);
     return NextResponse.json(
       { message: "Failed to post item", error: err.message },
       { status: 500 }
     );
   }
 }
+
 export async function GET(req) {
   try {
     await connectDB();

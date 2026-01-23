@@ -1,27 +1,39 @@
 "use client";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
 
-export function AuthProvider({ children }) {
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [accountType, setAccountType] = useState(null);
 
-  const login = (role = "user") => {
+  // 🔥 Restore session on refresh
+  useEffect(() => {
+    const storedUser = localStorage.getItem("ecoswap-user");
+    if (storedUser) {
+      const parsed = JSON.parse(storedUser);
+      setUser(parsed);
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  const login = (userData) => {
+    localStorage.setItem("ecoswap-user", JSON.stringify(userData));
+    setUser(userData);
     setIsLoggedIn(true);
-    setAccountType(role);
   };
 
   const logout = () => {
+    localStorage.removeItem("ecoswap-user");
+    setUser(null);
     setIsLoggedIn(false);
-    setAccountType(null);
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, accountType, login, logout }}>
+    <AuthContext.Provider value={{ user, isLoggedIn, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
-}
+};
 
 export const useAuth = () => useContext(AuthContext);

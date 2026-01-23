@@ -20,9 +20,16 @@ export async function POST(req) {
 
     return NextResponse.json({
       message: "Login successful",
-      user: { id: user._id, email: user.email, accountType: user.accountType },
+      user: {
+        id: user._id,
+        email: user.email,
+        accountType: user.accountType,
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+      },
     });
-  } catch (err) {
+  } 
+  catch (err) {
     return NextResponse.json({ message: err.message }, { status: 500 });
   }
 }

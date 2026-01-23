@@ -36,6 +36,19 @@ export default function Header() {
     router.push(path);
   };
 
+  const { user } = useAuth();
+  console.log("AUTH USER:", user);
+
+  const getInitials = () => {
+    if (!user) return "U";
+    if (user.firstName && user.lastName)
+      return `${user.firstName[0]}${user.lastName[0]}`.toUpperCase();
+    if (user.firstName)
+      return user.firstName[0].toUpperCase();
+    if (user.email) return user.email[0].toUpperCase();
+    return "U";
+  };
+
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -99,7 +112,7 @@ export default function Header() {
                   className="w-10 h-10 rounded-full bg-green-600 text-white flex items-center justify-center cursor-pointer"
                   onClick={() => setShowMenu((prev) => !prev)}
                 >
-                  {accountType?.charAt(0).toUpperCase() || "U"}
+                  {getInitials()}
                 </div>
 
                 {/* Dropdown */}

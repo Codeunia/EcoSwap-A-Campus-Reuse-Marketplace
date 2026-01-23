@@ -33,11 +33,11 @@ export default function Login() {
         password,
         accountType,
       });
-
+      login(res.data.user);
       toast.success("Login successful 🎉");
 
       // set auth state
-      login(accountType);
+      // login(accountType);
 
       // redirect based on role
       if (accountType === "user") {

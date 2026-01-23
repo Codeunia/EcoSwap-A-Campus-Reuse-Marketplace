@@ -44,7 +44,20 @@ export async function POST(req) {
 
     await newUser.save();
 
-    return new Response(JSON.stringify({ message: "User registered successfully" }), { status: 201 });
+    return new Response(
+      JSON.stringify({
+        message: "User registered successfully",
+        user: {
+          id: newUser._id,
+          email: newUser.email,
+          accountType: newUser.accountType,
+          firstName: newUser.firstName,
+          lastName: newUser.lastName,
+        },
+      }),
+      { status: 201 }
+    );
+
   } catch (err) {
     console.error("❌ Error in register API:", err);
     return new Response(JSON.stringify({ message: "Server error" }), { status: 500 });

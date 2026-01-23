@@ -8,15 +8,16 @@ import { RiArrowDownSLine, RiImageAddLine } from "react-icons/ri";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 
-// ⚡ Add your Cloudinary values here
 const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-const UPLOAD_PRESET = process.env.NEXT_PUBLIC_UPLOAD_PRESET ; 
+const UPLOAD_PRESET = process.env.NEXT_PUBLIC_UPLOAD_PRESET;
 
 const PostItem = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [images, setImages] = useState([]); 
-  const [uploadedUrls, setUploadedUrls] = useState([]); 
+  const [images, setImages] = useState([]);
+  const [uploadedUrls, setUploadedUrls] = useState([]);
+  const [listingType, setListingType] = useState("sell");
+  const [contactMethod, setContactMethod] = useState("message");
 
   const handleImageUpload = async (files) => {
     const urls = [];
@@ -51,10 +52,11 @@ const PostItem = () => {
         description: e.target.description.value,
         category: e.target.category.value,
         condition: e.target.condition.value,
-        type: e.target.type.value,
-        price: e.target.price.value,
-        contactMethod: e.target.contactMethod.value,
-        meetingLocation: e.target.meetingLocation.value,
+        type: listingType,
+        price: listingType === "sell" ? e.target.price?.value : null,
+        contactMethod,
+        email: contactMethod === "email" ? e.target.email?.value : null,
+        phone: contactMethod === "phone" ? e.target.phone?.value : null,
         availability: e.target.availability.value,
         photos: urls,
       };
@@ -75,7 +77,6 @@ const PostItem = () => {
       setLoading(false);
     }
   };
-
 
   return (
     <>
@@ -113,6 +114,7 @@ const PostItem = () => {
                     name="title"
                   />
                 </div>
+                
 
                 {/* Description */}
                 <div>
@@ -143,8 +145,12 @@ const PostItem = () => {
                     <option value="">Select a category</option>
                     <option value="textbooks">Textbooks</option>
                     <option value="electronics">Electronics</option>
-                    <option value="clothes">Clothes</option>
-                    <option value="furniture">Furniture</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="Kitchen Items">Kitchen Items</option>
+                    <option value="Stationery">Stationery</option>
+                    <option value="Home Decor">Home Decor</option>
+                    <option value="Appliances">Appliances</option>
+                    <option value="Academic">Academic</option>
                   </select>
                 </div>
 
@@ -170,18 +176,23 @@ const PostItem = () => {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Listing Type *
                   </label>
+
                   <div className="flex space-x-4">
-                    {["sell", "donate", "swap"].map((type, index) => (
-                      <label key={index} className="flex items-center cursor-pointer">
+                    {["sell", "donate", "swap"].map((type) => (
+                      <label
+                        key={type}
+                        className="flex items-center cursor-pointer"
+                      >
                         <input
-                          className="mr-2 text-green-600 focus:ring-green-500"
                           type="radio"
-                          value={type}
                           name="type"
-                          defaultChecked={type === "sell"}
+                          value={type}
+                          checked={listingType === type}
+                          onChange={() => setListingType(type)}
+                          className="mr-2 text-green-600 focus:ring-green-500"
                         />
-                        <span className="text-sm text-gray-700">
-                          {type.charAt(0).toUpperCase() + type.slice(1)}
+                        <span className="text-sm text-gray-700 capitalize">
+                          {type}
                         </span>
                       </label>
                     ))}
@@ -189,130 +200,154 @@ const PostItem = () => {
                 </div>
 
                 {/* Price */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Price *
-                  </label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                      $
-                    </span>
-                    <input
-                      placeholder="0.00"
-                      min="0"
-                      step="0.01"
-                      className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
-                      required
-                      type="number"
-                      name="price"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Column */}
-              <div className="space-y-6">
-                {/* Photos */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Item Photos
-                  </label>
-                  <p className="text-xs text-gray-500 mb-4">
-                    Add up to 5 photos. First photo will be the main image.
-                  </p>
-                  <div className="border-2 border-dashed rounded-lg p-6 text-center transition-colors border-gray-300 hover:border-green-400">
-                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <RiImageAddLine className="text-gray-400 text-2xl" />
-                    </div>
-                    <label className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors cursor-pointer whitespace-nowrap">
-                      Choose Files
-                      <input
-                        multiple
-                        accept="image/*"
-                        className="hidden"
-                        type="file"
-                        onChange={(e) => setImages([...e.target.files])}
-                      />
+                {listingType === "sell" && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Price *
                     </label>
-                    <p className="text-xs text-gray-500 mt-2">
-                      PNG, JPG, GIF up to 10MB each
+
+                    <div className="relative">
+                      <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                        $
+                      </span>
+                      <input
+                        name="price"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        required
+                        placeholder="0.00"
+                        className="w-full pl-8 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
+                      />
+                    </div>
+                  </div>
+                )}
+                </div>
+
+                {/* Right Column */}
+                <div className="space-y-6">
+                  {/* Photos */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Item Photos
+                    </label>
+                    <p className="text-xs text-gray-500 mb-4">
+                      Add up to 5 photos. First photo will be the main image.
                     </p>
-                  </div>
-                  {/* Preview */}
-                  <div className="mt-4 grid grid-cols-3 gap-2">
-                    {images.length > 0 &&
-                      Array.from(images).map((file, idx) => (
-                        <img
-                          key={idx}
-                          src={URL.createObjectURL(file)}
-                          alt="preview"
-                          className="w-full h-24 object-cover rounded-lg border"
-                        />
-                      ))}
-                  </div>
-                </div>
-
-                {/* Contact Method */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Preferred Contact Method *
-                  </label>
-                  <div className="space-y-3">
-                    {[
-                      { value: "message", label: "Platform Messages" },
-                      { value: "email", label: "Email" },
-                      { value: "phone", label: "Phone" },
-                    ].map((method, index) => (
-                      <label key={index} className="flex items-center cursor-pointer">
+                    <div className="border-2 border-dashed rounded-lg p-6 text-center transition-colors border-gray-300 hover:border-green-400">
+                      <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <RiImageAddLine className="text-gray-400 text-2xl" />
+                      </div>
+                      <label className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors cursor-pointer whitespace-nowrap">
+                        Choose Files
                         <input
-                          className="mr-3 text-green-600 focus:ring-green-500"
-                          type="radio"
-                          value={method.value}
-                          name="contactMethod"
-                          defaultChecked={method.value === "message"}
+                          multiple
+                          accept="image/*"
+                          className="hidden"
+                          type="file"
+                          onChange={(e) => setImages([...e.target.files])}
                         />
-                        <span className="text-sm text-gray-700">{method.label}</span>
                       </label>
-                    ))}
+                      <p className="text-xs text-gray-500 mt-2">
+                        PNG, JPG, GIF up to 10MB each
+                      </p>
+                    </div>
+                    {/* Preview */}
+                    <div className="mt-4 grid grid-cols-3 gap-2">
+                      {images.length > 0 &&
+                        Array.from(images).map((file, idx) => (
+                          <img
+                            key={idx}
+                            src={URL.createObjectURL(file)}
+                            alt="preview"
+                            className="w-full h-24 object-cover rounded-lg border"
+                          />
+                        ))}
+                    </div>
+                  </div>
+
+                  {/* Contact Method */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Preferred Contact Method *
+                    </label>
+
+                    <div className="space-y-3">
+                      {[
+                        { value: "message", label: "Platform Messages" },
+                        { value: "email", label: "Email" },
+                        { value: "phone", label: "Phone" },
+                      ].map((method) => (
+                        <label key={method.value} className="flex items-center cursor-pointer">
+                          <input
+                            type="radio"
+                            name="contactMethod"
+                            value={method.value}
+                            checked={contactMethod === method.value}
+                            onChange={() => setContactMethod(method.value)}
+                            className="mr-3 text-green-600 focus:ring-green-500"
+                          />
+                          <span className="text-sm text-gray-700">{method.label}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  {contactMethod === "email" && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Email Address *
+                      </label>
+                      <input
+                        type="email"
+                        name="email"
+                        required
+                        placeholder="you@example.com"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
+                      />
+                    </div>
+                  )}
+
+                  {contactMethod === "phone" && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Phone Number *
+                      </label>
+                      <input
+                        type="tel"
+                        name="phone"
+                        required
+                        placeholder="+1 234 567 8900"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
+                      />
+                    </div>
+                  )}
+
+                  {/* Availability */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Availability
+                    </label>
+                    <select
+                      name="availability"
+                      className="w-full px-4 py-3 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
+                    >
+                      <option value="flexible">Flexible</option>
+                      <option value="weekdays">Weekdays only</option>
+                      <option value="weekends">Weekends only</option>
+                      <option value="evenings">Evenings only</option>
+                    </select>
                   </div>
                 </div>
-
-                {/* Meeting Location */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Preferred Meeting Location
-                  </label>
-                  <input
-                    placeholder="e.g., Student Union, Library lobby"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
-                    type="text"
-                    name="meetingLocation"
-                  />
-                </div>
-
-                {/* Availability */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Availability
-                  </label>
-                  <select
-                    name="availability"
-                    className="w-full px-4 py-3 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
-                  >
-                    <option value="flexible">Flexible</option>
-                    <option value="weekdays">Weekdays only</option>
-                    <option value="weekends">Weekends only</option>
-                    <option value="evenings">Evenings only</option>
-                  </select>
-                </div>
-              </div>
+              
             </div>
 
             {/* Footer */}
             <div className="mt-8 pt-6 border-t border-gray-200">
               <div className="flex flex-col sm:flex-row gap-4 justify-between items-center">
                 <p className="text-sm text-gray-600">
-                  By posting, you agree to our community guidelines and terms of service.
+                  By posting, you agree to our community guidelines and terms of
+                  service.
                 </p>
                 <button
                   type="submit"
