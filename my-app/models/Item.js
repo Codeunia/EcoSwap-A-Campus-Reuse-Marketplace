@@ -73,6 +73,26 @@ const ItemSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    reviews: [
+    {
+      userId: String,
+      userName: String,
+      rating: Number,
+      comment: String,
+      createdAt: Date,
+    }
+  ],
+    views: { 
+      type: Number, 
+      default: 0 
+    },
+    likes: [
+      { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: "User",
+        default : [] , 
+      }
+    ],
   },
   { timestamps: true }
 );

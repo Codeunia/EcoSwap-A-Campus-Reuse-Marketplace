@@ -1,36 +1,40 @@
 "use client";
-import { createContext, useContext, useEffect, useState } from "react";
 
-const AuthContext = createContext();
+import { createContext, useContext, useEffect, useState } from "react";
+import api from "@/lib/axios";
+
+const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  // 🔥 Restore session on refresh
   useEffect(() => {
-    const storedUser = localStorage.getItem("ecoswap-user");
-    if (storedUser) {
-      const parsed = JSON.parse(storedUser);
-      setUser(parsed);
-      setIsLoggedIn(true);
-    }
+    const fetchUser = async () => {
+      try {
+        const res = await api.get("/api/me");
+        setUser(res.data);
+      } catch {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
   }, []);
 
   const login = (userData) => {
-    localStorage.setItem("ecoswap-user", JSON.stringify(userData));
-    setUser(userData);
-    setIsLoggedIn(true);
+    setUser(userData); 
   };
 
-  const logout = () => {
-    localStorage.removeItem("ecoswap-user");
+  const logout = async () => {
+    await api.post("/api/logout");
     setUser(null);
-    setIsLoggedIn(false);
   };
 
   return (
-    <AuthContext.Provider value={{ user, isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ user, isLoggedIn: !!user, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

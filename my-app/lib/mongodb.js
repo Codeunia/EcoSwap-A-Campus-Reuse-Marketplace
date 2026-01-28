@@ -8,7 +8,7 @@ if (!MONGODB_URI) {
 
 let isConnected = false;
 
-export async function connectDB() {
+export default async function connectDB() {
   if (isConnected) return;
 
   try {

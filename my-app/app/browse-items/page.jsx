@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "@/lib/axios";
 import { Search, Grid, List, User } from "lucide-react";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
@@ -49,6 +49,8 @@ const BrowseItems = () => {
   const [selectedCondition, setSelectedCondition] = useState("");
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(1000);
+  const ITEMS_PER_PAGE = 9;
+  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -63,6 +65,19 @@ const BrowseItems = () => {
     };
     fetchItems();
   }, []);
+
+  useEffect(() => {
+    setVisibleCount(ITEMS_PER_PAGE);
+  }, [
+    search,
+    selectedCategory,
+    selectedType,
+    selectedCondition,
+    minPrice,
+    maxPrice,
+    sort,
+  ]);
+
 
 const filteredItems = items
   .filter((item) =>
@@ -297,7 +312,9 @@ const filteredItems = items
 
                   {/* Items Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {filteredItems.map((item) => {
+                    {filteredItems
+                    .slice(0, visibleCount)
+                    .map((item) => {
                       const badgeClass = typeBadgeClasses[item.type];
                       const conditionClass =
                         conditionClasses[item.condition] || "text-gray-600";
@@ -381,11 +398,17 @@ const filteredItems = items
                     })}
                   </div>
 
-                  <div className="text-center mt-8">
-                    <button className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium whitespace-nowrap cursor-pointer">
-                      Load More Items
-                    </button>
-                  </div>
+                  {filteredItems.length > visibleCount && (
+                    <div className="text-center mt-8">
+                      <button
+                        onClick={() => setVisibleCount((prev) => prev + ITEMS_PER_PAGE)}
+                        disabled={visibleCount >= filteredItems.length}
+                        className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium cursor-pointer"
+                      >
+                        Load More Items
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
             </div>

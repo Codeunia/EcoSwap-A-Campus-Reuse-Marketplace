@@ -1,6 +1,8 @@
-import { connectDB } from "../../../lib/mongodb.js";
+import connectDB  from "../../../lib/mongodb.js";
 import User from "../../../models/User.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { NextResponse } from "next/server";
 
 export async function POST(req) {
   try {
@@ -44,19 +46,31 @@ export async function POST(req) {
 
     await newUser.save();
 
-    return new Response(
-      JSON.stringify({
-        message: "User registered successfully",
-        user: {
-          id: newUser._id,
-          email: newUser.email,
-          accountType: newUser.accountType,
-          firstName: newUser.firstName,
-          lastName: newUser.lastName,
-        },
-      }),
-      { status: 201 }
+    const token = jwt.sign(
+      { id: newUser._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
     );
+
+    const res = NextResponse.json({
+      message: "User registered successfully",
+      user: {
+        id: newUser._id,
+        email: newUser.email,
+        accountType: newUser.accountType,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+      },
+    }, { status: 201 });
+
+    res.cookies.set("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+    });
+
+    return res;
 
   } catch (err) {
     console.error("❌ Error in register API:", err);

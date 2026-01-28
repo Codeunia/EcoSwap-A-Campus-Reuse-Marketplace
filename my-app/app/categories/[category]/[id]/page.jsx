@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
-import { useEffect, useState } from "react";
-import axios from "axios";
-
+import { use, useEffect, useState } from "react";
+import axios from "@/lib/axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 import {
   ArrowLeft,
   MapPin,
@@ -14,15 +14,21 @@ import {
   Repeat,
   MessageCircle,
 } from "lucide-react";
+
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 export default function ItemDetailsPage({ params }) {
-  const { id , category} = React.use(params);
+  const { id } = use(params);
+  const router = useRouter();
 
   const [item, setItem] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeImage, setActiveImage] = useState(0);
+
+  const [reviewText, setReviewText] = useState("");
+  const [rating, setRating] = useState(0);
+  const [liked, setLiked] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -37,16 +43,36 @@ export default function ItemDetailsPage({ params }) {
         setLoading(false);
       }
     };
+
     fetchItem();
   }, [id]);
 
-  if (loading) {
-    return <p className="text-center pt-32">Loading item...</p>;
-  }
+  useEffect(() => {
+    if (!id) return;
 
-  if (!item) {
-    return <p className="text-center pt-32">Item not found</p>;
-  }
+    const viewed = sessionStorage.getItem(`viewed-${id}`);
+    if (viewed) return;
+
+    axios.patch(`/api/items/${id}/view`);
+    sessionStorage.setItem(`viewed-${id}`, "true");
+  }, [id]);
+
+  useEffect(() => {
+    if (!item) return;
+
+    axios.get("/api/me").then((res) => {
+      const user = res.data;
+      if (!user) return;
+
+      const alreadyLiked = item.likes?.some((u) => u.toString() === user._id);
+
+      setLiked(alreadyLiked);
+    });
+  }, [item]);
+
+  if (loading) return <p className="text-center pt-32">Loading item...</p>;
+  if (!item) return <p className="text-center pt-32">Item not found</p>;
+
 
   return (
     <>
@@ -54,21 +80,19 @@ export default function ItemDetailsPage({ params }) {
 
       <main className="flex-1">
         <div className="max-w-7xl mx-auto px-6 py-12">
-
-          {/* Back */}
+          {/* BACK */}
           <Link
             href="/browse-items"
-            className="inline-flex items-center text-gray-600 hover:text-emerald-600 mb-8 transition"
+            className="inline-flex items-center text-gray-600 hover:text-emerald-600 mb-8"
           >
             <ArrowLeft className="w-5 h-5 mr-2" />
             Back to Browse
           </Link>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-
-            {/* LEFT – Images */}
+            {/* LEFT – IMAGES */}
             <div>
-              <div className="bg-gray-50 rounded-2xl overflow-hidden mb-4 aspect-square relative">
+              <div className="bg-gray-50 rounded-2xl overflow-hidden mb-4 aspect-square">
                 {item.photos?.length ? (
                   <img
                     src={item.photos[activeImage]}
@@ -82,38 +106,34 @@ export default function ItemDetailsPage({ params }) {
                 )}
               </div>
 
-              {/* Thumbnails */}
               <div className="grid grid-cols-4 gap-3">
                 {item.photos?.map((photo, index) => (
                   <button
                     key={index}
                     onClick={() => setActiveImage(index)}
-                    className={`aspect-square rounded-lg overflow-hidden border-2 transition-all
-                      ${
-                        activeImage === index
-                          ? "border-emerald-500"
-                          : "border-gray-200 hover:border-gray-300"
-                      }`}
+                    className={`aspect-square rounded-lg border-2 ${
+                      activeImage === index
+                        ? "border-emerald-500"
+                        : "border-gray-200"
+                    }`}
                   >
                     <img
                       src={photo}
-                      alt={`preview-${index}`}
-                      className="object-contain p-2 w-full h-full bg-gray-50"
+                      className="object-contain p-2 w-full h-full"
                     />
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* RIGHT – Details */}
+            {/* RIGHT – DETAILS */}
             <div>
-              <div className="flex items-start justify-between mb-4">
+              {/* TITLE + META */}
+              <div className="flex justify-between mb-4">
                 <div>
-                  <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                    {item.title}
-                  </h1>
+                  <h1 className="text-3xl font-bold mb-2">{item.title}</h1>
 
-                  <div className="flex items-center gap-4 text-sm text-gray-600">
+                  <div className="flex gap-4 text-sm text-gray-600">
                     <span className="flex items-center">
                       <MapPin className="w-4 h-4 mr-1" />
                       {item.meetingLocation || "Campus"}
@@ -123,73 +143,170 @@ export default function ItemDetailsPage({ params }) {
                       {new Date(item.createdAt).toLocaleDateString()}
                     </span>
                     <span className="flex items-center">
-                      <Eye className="w-4 h-4 mr-1" /> Views
+                      <Eye className="w-4 h-4 mr-1" /> {item.views || 0}
                     </span>
                   </div>
                 </div>
 
-                <button className="p-3 rounded-full hover:bg-gray-100">
-                  <Heart className="w-6 h-6 text-gray-600" />
+                {/* LIKE BUTTON */}
+                <button
+                  onClick={async () => {
+                    try {
+                      const res = await axios.patch(
+                        `/api/items/${item._id}/like`,
+                      );
+
+                      setLiked(res.data.liked);
+                      setItem({
+                        ...item,
+                        likes: res.data.likes, 
+                      });
+                    } catch (err) {
+                      if (err.response?.status === 401) {
+                        alert("Please login to like");
+                      }
+                    }
+                  }}
+                  className={`p-3 flex gap-1 transition active:scale-95 ${
+                    liked ? "bg-red-100" : "hover:bg-gray-100"
+                  }`}
+                >
+                  <Heart
+                    className={`w-6 h-6 ${
+                      liked ? "fill-red-500 text-red-500" : "text-gray-400"
+                    }`}
+                  />
+                  <span>{item.likes?.length || 0}</span>
                 </button>
               </div>
 
-              {/* Price Card */}
-              <div className="bg-emerald-50 rounded-xl p-6 mb-6">
-                <div className="text-3xl font-bold text-emerald-600 mb-2">
-                  {item.type === "sell"
-                    ? `$${item.price}`
-                    : item.type === "donate"
-                    ? "Free"
-                    : "Swap"}
-                </div>
+              <div className="bg-gray-50 rounded-xl p-6 mb-6">
+                <h3 className="text-lg font-bold mb-4">Product Details</h3>
 
-                <div className="flex items-center gap-3">
-                  <span className="px-3 py-1 bg-white rounded-full text-sm font-medium">
-                    {item.condition}
-                  </span>
-                  <span className="px-3 py-1 bg-white rounded-full text-sm font-medium">
+                <div className="space-y-2 text-sm">
+                  <p>
+                    <span className="font-medium">Category:</span>{" "}
                     {item.category}
-                  </span>
+                  </p>
+
+                  <p>
+                    <span className="font-medium">Condition:</span>{" "}
+                    {item.condition}
+                  </p>
+
+                  <p>
+                    <span className="font-medium">Cost:</span>{" "}
+                    {item.type === "sell"
+                      ? "For Sale"
+                      : item.type === "donate"
+                        ? "Free"
+                        : "Swap"}
+                  </p>
+
+                  {item.type === "sell" && (
+                    <p className="text-lg font-bold text-emerald-600">
+                      Price: ${item.price}
+                    </p>
+                  )}
                 </div>
               </div>
 
-              {/* Actions */}
+              {/* ACTIONS */}
               <div className="space-y-3">
                 {item.type === "sell" && (
-                  <button className="w-full py-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-semibold text-lg">
-                    Buy Now
+                  <button
+                    onClick={() => router.push(`/checkout/${item._id}`)}
+                    className="w-full py-4 bg-black text-white rounded-xl font-semibold"
+                  >
+                    Pay Seller Securely
                   </button>
                 )}
 
-                <div className="grid grid-cols-2 gap-3">
-                  <button className="py-3 bg-white hover:bg-gray-50 text-emerald-600 border-2 border-emerald-600 rounded-xl font-semibold">
+                <button
+                  onClick={() => router.push(`/checkout/${item._id}`)}
+                  className="w-full py-4 bg-emerald-600 text-white rounded-xl font-semibold"
+                >
+                  <MessageCircle className="inline w-5 h-5 mr-2" />
+                  Contact Seller
+                </button>
+
+                {item.type === "swap" && (
+                  <button className="w-full py-3 border-2 border-emerald-600 text-emerald-600 rounded-xl">
                     <Repeat className="inline w-5 h-5 mr-2" />
                     Propose Exchange
                   </button>
-
-                  <button className="py-3 bg-white hover:bg-gray-50 text-gray-900 border-2 border-gray-300 rounded-xl font-semibold">
-                    <MessageCircle className="inline w-5 h-5 mr-2" />
-                    Contact Seller
-                  </button>
-                </div>
+                )}
               </div>
 
-              {/* Description */}
-              <div className="border-t border-gray-200 pt-6 mt-6">
+              {/* DESCRIPTION */}
+              <div className="border-t pt-6 mt-6">
                 <h2 className="text-xl font-bold mb-4">Description</h2>
-                <p className="text-gray-700 leading-relaxed">
-                  {item.description}
-                </p>
+                <p className="text-gray-700">{item.description}</p>
               </div>
 
-              {/* Seller */}
-              <div className="border-t border-gray-200 pt-6 mt-6">
-                <h2 className="text-xl font-bold mb-4">Seller Information</h2>
-                <p className="text-gray-700">
-                  {item.postedBy?.name || "Anonymous"}
-                </p>
-              </div>
+              {/* REVIEWS */}
+              <div className="border-t pt-6 mt-6">
+                <h2 className="text-xl font-bold mb-4">Ratings & Reviews</h2>
 
+                {/* EXISTING REVIEWS */}
+                {item.reviews?.map((r, i) => (
+                  <div
+                    key={i}
+                    className="flex gap-3 bg-gray-50 p-4 rounded-lg mb-3"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold">
+                      {r.userName?.[0] || "U"}
+                    </div>
+
+                    <div>
+                      <p className="font-semibold">{r.userName}</p>
+                      <p className="text-yellow-400">{"★".repeat(r.rating)}</p>
+                      <p className="text-sm text-gray-700">{r.comment}</p>
+                    </div>
+                  </div>
+                ))}
+
+                {/* STAR SELECT */}
+                <div className="flex gap-1 mb-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <span
+                      key={star}
+                      onClick={() => setRating(star)}
+                      className={`text-2xl cursor-pointer ${
+                        star <= rating ? "text-yellow-400" : "text-gray-300"
+                      }`}
+                    >
+                      ★
+                    </span>
+                  ))}
+                </div>
+
+                <textarea
+                  value={reviewText}
+                  onChange={(e) => setReviewText(e.target.value)}
+                  className="w-full p-3 border rounded-lg"
+                  placeholder="Write a review..."
+                />
+
+                <button
+                  onClick={async () => {
+                    const res = await axios.post(
+                      `/api/items/${item._id}/review`,
+                      {
+                        rating,
+                        comment: reviewText,
+                      },
+                    );
+
+                    setItem({ ...item, reviews: res.data });
+                    setReviewText("");
+                    setRating(0);
+                  }}
+                  className="mt-2 bg-emerald-600 text-white px-6 py-2 rounded-lg"
+                >
+                  Submit Review
+                </button>
+              </div>
             </div>
           </div>
         </div>

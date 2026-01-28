@@ -8,7 +8,7 @@ import { LuRecycle } from "react-icons/lu";
 import { useAuth } from "../context/AuthContext";
 
 export default function Header() {
-  const { isLoggedIn, accountType, logout } = useAuth();
+  const { isLoggedIn, logout } = useAuth();
   const [showMenu, setShowMenu] = useState(false);
   const router = useRouter();
   const menuRef = useRef(null);
