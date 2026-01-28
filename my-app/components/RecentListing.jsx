@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ListingCard from "./ListingCard";
 import { useRouter } from "next/navigation";
+import Loader from "./Loader";
 
 const ListingsSection = () => {
   const [listings, setListings] = useState([]);
@@ -40,7 +41,7 @@ const ListingsSection = () => {
 
         {/* Listings */}
         {loading ? (
-          <p className="text-center text-gray-500">Loading listings...</p>
+          <Loader />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {listings.map((listing) => (

@@ -68,7 +68,7 @@ export default function ItemDetailsPage({ params }) {
     setLiked(alreadyLiked);
   }, [item, user]);
 
-  if (loading) return <p className="text-center pt-32">Loading item...</p>;
+  if (loading) return null ;
   if (!item) return <p className="text-center pt-32">Item not found</p>;
 
   return (

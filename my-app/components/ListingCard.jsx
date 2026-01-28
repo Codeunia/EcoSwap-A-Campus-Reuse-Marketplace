@@ -1,6 +1,6 @@
 "use client";
 
-import { FaCircleUser } from "react-icons/fa6";
+import { FaUserAlt  } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 
 const ListingCard = ({ listing }) => {
@@ -20,7 +20,6 @@ const ListingCard = ({ listing }) => {
 
   return (
     <div
-      onClick={() => router.push(`/items/${listing._id}`)}
       className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group cursor-pointer"
     >
       {/* Image Section */}
@@ -73,8 +72,8 @@ const ListingCard = ({ listing }) => {
         {/* Seller */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-              <FaCircleUser className="text-2xl text-grey-600"/>
+            <div className="w-8 h-8 flex items-center justify-center">
+              <FaUserAlt  className="text-xl text-grey-600"/>
             </div>
             <span className="text-sm text-gray-600">
               {listing.postedBy?.firstName} {listing.postedBy?.lastName}

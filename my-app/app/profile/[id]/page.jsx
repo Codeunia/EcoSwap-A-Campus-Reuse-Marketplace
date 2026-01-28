@@ -21,7 +21,7 @@ export default function SellerProfile({ params }) {
     fetchProfile();
   }, [id]);
 
-  if (!seller) return <p className="pt-32 text-center">Loading...</p>;
+  if (!seller) return null;
 
   return (
     <>

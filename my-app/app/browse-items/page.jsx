@@ -6,6 +6,7 @@ import { Search, Grid, List, User } from "lucide-react";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import { useSearchParams } from "next/navigation";
+import Loader from "../../components/Loader";
 
 // Filter options
 const categories = [
@@ -301,7 +302,7 @@ const BrowseItems = () => {
             {/* Items */}
             <div className="lg:w-3/4">
               {loading ? (
-                <p className="text-center text-gray-600">Loading items...</p>
+                <Loader/>
               ) : (
                 <div className="bg-white rounded-2xl shadow-lg p-6">
                   <div className="flex items-center justify-between mb-6">

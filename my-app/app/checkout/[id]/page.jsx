@@ -10,7 +10,7 @@ export default function CheckoutPage({ params }) {
     axios.get(`/api/items/${id}`).then(res => setItem(res.data));
   }, [id]);
 
-  if (!item) return <p className="pt-32 text-center">Loading...</p>;
+  if (!item) return null ;
 
   return (
     <div className="max-w-xl mx-auto pt-32 px-6">
