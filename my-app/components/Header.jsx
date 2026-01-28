@@ -56,7 +56,7 @@ export default function Header() {
           {/* Logo */}
           <div
             className="flex items-center cursor-pointer"
-            onClick={() => router.push("/home")}
+            onClick={() => router.push(isLoggedIn ? "/home" : "/login")}
           >
             <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
               <LuRecycle className="text-white" />
@@ -119,10 +119,10 @@ export default function Header() {
                 {showMenu && (
                   <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg">
                     <button
-                      onClick={() => {
-                        logout();
+                      onClick={async () => {
+                        await logout();
                         toast.success("Logged out successfully");
-                        router.push("/");
+                        router.push("/login");
                       }}
                       className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100 rounded-lg"
                     >

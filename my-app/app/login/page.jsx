@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import axios from "@/lib/axios";
 import toast from "react-hot-toast";
 import {
   RiLoginCircleLine,
@@ -16,6 +16,7 @@ import {
 
 import Header from "../../components/Header";
 import { useAuth } from "../../context/AuthContext"; 
+import PublicRoute from "../../components/PublicRoute";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -52,6 +53,8 @@ export default function Login() {
 
   return (
     <>
+    <PublicRoute>
+
       <Header />
       <div className="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-md w-full space-y-8">
@@ -82,8 +85,8 @@ export default function Login() {
                     onClick={() => setAccountType("user")}
                     className={`flex-1 py-3 px-4 rounded-lg border-2 transition-all cursor-pointer ${
                       accountType === "user"
-                        ? "border-green-500 bg-green-50 text-green-700"
-                        : "border-gray-200 hover:border-gray-300"
+                      ? "border-green-500 bg-green-50 text-green-700"
+                      : "border-gray-200 hover:border-gray-300"
                     }`}
                   >
                     <div className="flex items-center justify-center space-x-2">
@@ -99,7 +102,7 @@ export default function Login() {
                       accountType === "admin"
                         ? "border-green-500 bg-green-50 text-green-700"
                         : "border-gray-200 hover:border-gray-300"
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center justify-center space-x-2">
                       <RiAdminLine className="text-lg" />
@@ -181,7 +184,7 @@ export default function Login() {
                     id="remember-me"
                     type="checkbox"
                     className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
-                  />
+                    />
                   <label
                     htmlFor="remember-me"
                     className="ml-2 text-sm text-gray-700"
@@ -192,7 +195,7 @@ export default function Login() {
                 <a
                   href="/forgot-password"
                   className="text-sm text-green-600 hover:text-green-700 cursor-pointer"
-                >
+                  >
                   Forgot password?
                 </a>
               </div>
@@ -201,7 +204,7 @@ export default function Login() {
               <button
                 type="submit"
                 className="w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors font-medium whitespace-nowrap cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-              >
+                >
                 Sign In as{" "}
                 {accountType.charAt(0).toUpperCase() + accountType.slice(1)}
               </button>
@@ -214,12 +217,13 @@ export default function Login() {
             <Link
               href="/"
               className="text-green-600 hover:text-green-700 font-medium"
-            >
+              >
               Sign up here
             </Link>
           </p>
         </div>
       </div>
+      </PublicRoute>
     </>
   );
 }

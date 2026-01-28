@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { RiArrowDownSLine, RiImageAddLine } from "react-icons/ri";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
+import ProtectedRoute from "../../components/ProtectedRoute";
 
 const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 const UPLOAD_PRESET = process.env.NEXT_PUBLIC_UPLOAD_PRESET;
@@ -81,6 +82,7 @@ const PostItem = () => {
 
   return (
     <>
+    <ProtectedRoute>
       <Header />
       <div className="pt-8 pb-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -193,7 +195,7 @@ const PostItem = () => {
                           checked={listingType === type}
                           onChange={() => setListingType(type)}
                           className="mr-2 text-green-600 focus:ring-green-500"
-                        />
+                          />
                         <span className="text-sm text-gray-700 capitalize">
                           {type}
                         </span>
@@ -260,11 +262,11 @@ const PostItem = () => {
                       {images.length > 0 &&
                         Array.from(images).map((file, idx) => (
                           <img
-                            key={idx}
-                            src={URL.createObjectURL(file)}
+                          key={idx}
+                          src={URL.createObjectURL(file)}
                             alt="preview"
                             className="w-full h-24 object-cover rounded-lg border"
-                          />
+                            />
                         ))}
                     </div>
                   </div>
@@ -322,7 +324,7 @@ const PostItem = () => {
                         required
                         placeholder="+1 234 567 8900"
                         className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
-                      />
+                        />
                     </div>
                   )}
 
@@ -334,7 +336,7 @@ const PostItem = () => {
                     <select
                       name="availability"
                       className="w-full px-4 py-3 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm"
-                    >
+                      >
                       <option value="flexible">Flexible</option>
                       <option value="weekdays">Weekdays only</option>
                       <option value="weekends">Weekends only</option>
@@ -365,6 +367,7 @@ const PostItem = () => {
         </div>
       </div>
       <Footer />
+      </ProtectedRoute>
     </>
   );
 };
