@@ -4,6 +4,7 @@ import { use, useEffect, useState } from "react";
 import axios from "@/lib/axios";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
 
 import {
   ArrowLeft,
@@ -29,6 +30,8 @@ export default function ItemDetailsPage({ params }) {
   const [reviewText, setReviewText] = useState("");
   const [rating, setRating] = useState(0);
   const [liked, setLiked] = useState(false);
+
+  const { user, loading: authLoading } = useAuth();
 
   useEffect(() => {
     if (!id) return;
@@ -58,21 +61,15 @@ export default function ItemDetailsPage({ params }) {
   }, [id]);
 
   useEffect(() => {
-    if (!item) return;
+    if (!item || !user) return;
 
-    axios.get("/api/me").then((res) => {
-      const user = res.data;
-      if (!user) return;
+    const alreadyLiked = item.likes?.some((id) => id.toString() === user._id);
 
-      const alreadyLiked = item.likes?.some((u) => u.toString() === user._id);
-
-      setLiked(alreadyLiked);
-    });
-  }, [item]);
+    setLiked(alreadyLiked);
+  }, [item, user]);
 
   if (loading) return <p className="text-center pt-32">Loading item...</p>;
   if (!item) return <p className="text-center pt-32">Item not found</p>;
-
 
   return (
     <>
@@ -132,7 +129,17 @@ export default function ItemDetailsPage({ params }) {
               <div className="flex justify-between mb-4">
                 <div>
                   <h1 className="text-3xl font-bold mb-2">{item.title}</h1>
-
+                  {item.postedBy && (
+                    <p className="text-sm text-gray-600 mb-2">
+                      Sold by{" "}
+                      <Link
+                        href={`/profile/${item.postedBy._id}`}
+                        className="font-semibold text-emerald-600 hover:underline"
+                      >
+                        {item.postedBy.firstName} {item.postedBy.lastName}
+                      </Link>
+                    </p>
+                  )}
                   <div className="flex gap-4 text-sm text-gray-600">
                     <span className="flex items-center">
                       <MapPin className="w-4 h-4 mr-1" />
@@ -159,7 +166,7 @@ export default function ItemDetailsPage({ params }) {
                       setLiked(res.data.liked);
                       setItem({
                         ...item,
-                        likes: res.data.likes, 
+                        likes: res.data.likes,
                       });
                     } catch (err) {
                       if (err.response?.status === 401) {
@@ -167,9 +174,7 @@ export default function ItemDetailsPage({ params }) {
                       }
                     }
                   }}
-                  className={`p-3 flex gap-1 transition active:scale-95 ${
-                    liked ? "bg-red-100" : "hover:bg-gray-100"
-                  }`}
+                  className={`p-3 flex gap-1 transition active:scale-95`}
                 >
                   <Heart
                     className={`w-6 h-6 ${
@@ -195,7 +200,7 @@ export default function ItemDetailsPage({ params }) {
                   </p>
 
                   <p>
-                    <span className="font-medium">Cost:</span>{" "}
+                    <span className="font-medium">Type:</span>{" "}
                     {item.type === "sell"
                       ? "For Sale"
                       : item.type === "donate"

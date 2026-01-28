@@ -18,7 +18,6 @@ const categories = [
   "Stationery",
   "Home Decor",
   "Grocery",
-  "Sports",
 ];
 
 const types = ["sell", "donate", "swap"];
@@ -313,14 +312,6 @@ const BrowseItems = () => {
                       <p className="text-gray-600">
                         {filteredItems.length} items found
                       </p>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <button className="p-2 rounded-lg bg-green-100 text-green-600">
-                        <Grid className="w-5 h-5" />
-                      </button>
-                      <button className="p-2 rounded-lg text-gray-400 hover:text-gray-600">
-                        <List className="w-5 h-5" />
-                      </button>
                     </div>
                   </div>
 

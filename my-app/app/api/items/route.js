@@ -1,61 +1,3 @@
-// import { NextResponse } from "next/server";
-// import connectDB  from "../../../lib/mongodb";
-// import Item from "../../../models/Item";
-
-// export async function POST(req) {
-//   try {
-//     await connectDB();
-
-//     const body = await req.json();
-//     const {
-//       title,
-//       description,
-//       category,
-//       condition,
-//       type,
-//       price,
-//       contactMethod,
-//       email,
-//       phone,
-//       availability = "flexible",
-//       photos = [],
-//     } = body;
-
-//     const newItem = new Item({
-//       title,
-//       description,
-//       category,
-//       condition,
-//       type,
-
-//       price: type === "sell" ? price : null,
-
-//       contactMethod,
-
-//       email: contactMethod === "email" ? email : null,
-//       phone: contactMethod === "phone" ? phone : null,
-
-//       availability,
-//       photos,
-//     });
-
-//     await newItem.save();
-
-//     return NextResponse.json(
-//       { message: "Item posted successfully", item: newItem },
-//       { status: 201 }
-//     );
-//   } 
-//   catch (err) {
-//     // console.error(err);
-//     return NextResponse.json(
-//       { message: "Failed to post item", error: err.message },
-//       { status: 500 }
-//     );
-//   }
-// }
-
-// import User from "../../../models/User";
 import { NextResponse } from "next/server";
 import connectDB from "../../../lib/mongodb";
 import Item from "../../../models/Item";
@@ -99,6 +41,7 @@ export async function GET(req) {
 
     const { searchParams } = new URL(req.url);
     const category = searchParams.get("category");
+    const limit = searchParams.get("limit");
 
     let filter = {};
     if (category) {
@@ -107,7 +50,8 @@ export async function GET(req) {
 
     const items = await Item.find(filter)
     .populate("postedBy", "firstName lastName email")
-    .sort({ createdAt: -1 });
+    .sort({ createdAt: -1 })
+    .limit(limit ? Number(limit) : 0);
 
     return NextResponse.json(items, { status: 200 });
   } catch (err) {

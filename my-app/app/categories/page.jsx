@@ -236,13 +236,13 @@ const CategoriesPage = () => {
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
                 className="bg-green-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-green-700 transition-colors whitespace-nowrap cursor-pointer"
-                href="/post-request"
+                href="/post-item"
               >
                 Post a Request
               </a>
               <a
                 className="bg-white text-green-600 border-2 border-green-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-green-50 transition-colors whitespace-nowrap cursor-pointer"
-                href="/browse"
+                href="/browse-items"
               >
                 Browse All Items
               </a>
