@@ -17,12 +17,12 @@ const categories = [
   "Kitchen Items",
   "Stationery",
   "Home Decor",
-  "Appliances",
-  "Academic",
+  "Grocery",
+  "Sports",
 ];
 
 const types = ["sell", "donate", "swap"];
-const conditions = ["New", "Like New", "Good", "Fair"];
+const conditions = ["new", "used", "fair"];
 
 const typeBadgeClasses = {
   sell: "bg-blue-100 text-blue-800",
@@ -78,37 +78,38 @@ const BrowseItems = () => {
     sort,
   ]);
 
-
-const filteredItems = items
-  .filter((item) =>
-    item.title.toLowerCase().includes(search.toLowerCase())
-  )
-  .filter((item) =>
-    selectedCategory
-      ? item.category?.toLowerCase() === selectedCategory.toLowerCase()
-      : true
-  )
-  .filter((item) =>
-    selectedType ? item.type?.toLowerCase() === selectedType.toLowerCase() : true
-  )
-  .filter((item) =>
-    selectedCondition
-      ? item.condition?.toLowerCase() === selectedCondition.toLowerCase()
-      : true
-  )
-  .filter((item) =>
-    item.type === "sell"
-      ? item.price >= minPrice && item.price <= maxPrice
-      : true
-  )
-  .sort((a, b) => {
-    if (sort === "newest") return new Date(b.createdAt) - new Date(a.createdAt);
-    if (sort === "oldest") return new Date(a.createdAt) - new Date(b.createdAt);
-    if (sort === "price-low") return (a.price || 0) - (b.price || 0);
-    if (sort === "price-high") return (b.price || 0) - (a.price || 0);
-    if (sort === "alphabetical") return a.title.localeCompare(b.title);
-    return 0;
-  });
+  const filteredItems = items
+    .filter((item) => item.title.toLowerCase().includes(search.toLowerCase()))
+    .filter((item) =>
+      selectedCategory
+        ? item.category?.toLowerCase() === selectedCategory.toLowerCase()
+        : true,
+    )
+    .filter((item) =>
+      selectedType
+        ? item.type?.toLowerCase() === selectedType.toLowerCase()
+        : true,
+    )
+    .filter((item) =>
+      selectedCondition
+        ? item.condition?.toLowerCase() === selectedCondition.toLowerCase()
+        : true,
+    )
+    .filter((item) =>
+      item.type === "sell"
+        ? item.price >= minPrice && item.price <= maxPrice
+        : true,
+    )
+    .sort((a, b) => {
+      if (sort === "newest")
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      if (sort === "oldest")
+        return new Date(a.createdAt) - new Date(b.createdAt);
+      if (sort === "price-low") return (a.price || 0) - (b.price || 0);
+      if (sort === "price-high") return (b.price || 0) - (a.price || 0);
+      if (sort === "alphabetical") return a.title.localeCompare(b.title);
+      return 0;
+    });
 
   const searchParams = useSearchParams();
   const categoryFromURL = searchParams.get("category");
@@ -117,8 +118,8 @@ const filteredItems = items
     if (categoryFromURL) {
       setSelectedCategory(
         categories.find(
-          (c) => c.toLowerCase() === categoryFromURL.toLowerCase()
-        ) || ""
+          (c) => c.toLowerCase() === categoryFromURL.toLowerCase(),
+        ) || "",
       );
     }
   }, [categoryFromURL]);
@@ -184,7 +185,9 @@ const filteredItems = items
             <div className="lg:w-1/4">
               <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-24">
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-semibold text-gray-900">Filters</h2>
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    Filters
+                  </h2>
                   <button
                     className="text-green-600 hover:text-green-700 text-sm font-medium cursor-pointer"
                     onClick={() => {
@@ -206,7 +209,10 @@ const filteredItems = items
                   </h3>
                   <div className="space-y-2">
                     {categories.map((cat) => (
-                      <label key={cat} className="flex items-center cursor-pointer">
+                      <label
+                        key={cat}
+                        className="flex items-center cursor-pointer"
+                      >
                         <input
                           type="radio"
                           checked={selectedCategory === cat}
@@ -221,10 +227,15 @@ const filteredItems = items
 
                 {/* Type */}
                 <div className="mb-6">
-                  <h3 className="text-lg font-medium text-gray-900 mb-3">Type</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-3">
+                    Type
+                  </h3>
                   <div className="space-y-2">
                     {types.map((t) => (
-                      <label key={t} className="flex items-center cursor-pointer">
+                      <label
+                        key={t}
+                        className="flex items-center cursor-pointer"
+                      >
                         <input
                           type="radio"
                           checked={selectedType === t}
@@ -266,7 +277,10 @@ const filteredItems = items
                   </h3>
                   <div className="space-y-2">
                     {conditions.map((c) => (
-                      <label key={c} className="flex items-center cursor-pointer">
+                      <label
+                        key={c}
+                        className="flex items-center cursor-pointer"
+                      >
                         <input
                           type="radio"
                           checked={selectedCondition === c}
@@ -312,9 +326,7 @@ const filteredItems = items
 
                   {/* Items Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {filteredItems
-                    .slice(0, visibleCount)
-                    .map((item) => {
+                    {filteredItems.slice(0, visibleCount).map((item) => {
                       const badgeClass = typeBadgeClasses[item.type];
                       const conditionClass =
                         conditionClasses[item.condition] || "text-gray-600";
@@ -322,77 +334,89 @@ const filteredItems = items
                         item.type === "sell"
                           ? `$${item.price}`
                           : item.type === "donate"
-                          ? "Free"
-                          : "Swap";
+                            ? "Free"
+                            : "Swap";
 
                       return (
-                        <Link href={`/categories/${item.category.toLowerCase()}/${item._id}`} key={item._id}>
-                        <div
+                        <Link
+                          href={`/categories/${item.category.toLowerCase()}/${item._id}`}
                           key={item._id}
-                          className="border border-gray-200 rounded-xl hover:shadow-lg transition-all duration-300 overflow-hidden group">
-                  
-                          <div className="relative h-48 overflow-hidden">
-                            {item.photos?.[0] ? (
-                              <img
-                                src={item.photos[0]}
-                                alt={item.title}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                                <span className="text-gray-400">No image</span>
-                              </div>
-                            )}
-                            <div className="absolute top-3 left-3">
-                              <span
-                                className={`px-2 py-1 rounded-full text-xs font-medium ${badgeClass}`}
-                              >
-                                {item.type}
-                              </span>
-                            </div>
-                            <div className="absolute top-3 right-3">
-                              <span className="bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full text-sm font-semibold text-gray-900">
-                                {priceLabel}
-                              </span>
-                            </div>
-                          </div>
-                          <div className="p-4">
-                            <div className="flex items-center justify-between mb-2">
-                              <span className="text-xs font-medium text-green-600">
-                                {item.category}
-                              </span>
-                              <span
-                                className={`text-xs font-medium ${conditionClass}`}>
-                                {item.condition}
-                              </span>
-                            </div>
-                            <h3 className="text-sm font-semibold text-gray-900 mb-2 line-clamp-2">
-                              {item.title}
-                            </h3>
-                            <p className="text-xs text-gray-600 mb-3 line-clamp-2">
-                              {item.description}
-                            </p>
-                            <div className="flex items-center justify-between text-xs text-gray-500">
-                              <div className="flex items-center space-x-1">
-                                <User className="w-4 h-4" />
-                                <span>{item.postedBy?.name || "Anonymous"}</span>
-                              </div>
-                              <span>
-                                {new Date(item.createdAt).toLocaleDateString()}
-                              </span>
-                            </div>
-                            <div className="mt-2 pt-2 border-t border-gray-100">
-                              <div className="flex items-center justify-between">
-                                <span className="text-xs text-gray-500">
-                                  {item.meetingLocation || "Campus"}
+                        >
+                          <div
+                            key={item._id}
+                            className="border border-gray-200 rounded-xl hover:shadow-lg transition-all duration-300 overflow-hidden group"
+                          >
+                            <div className="relative h-48 overflow-hidden">
+                              {item.photos?.[0] ? (
+                                <img
+                                  src={item.photos[0]}
+                                  alt={item.title}
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center bg-gray-100">
+                                  <span className="text-gray-400">
+                                    No image
+                                  </span>
+                                </div>
+                              )}
+                              <div className="absolute top-3 left-3">
+                                <span
+                                  className={`px-2 py-1 rounded-full text-xs font-medium ${badgeClass}`}
+                                >
+                                  {item.type}
                                 </span>
+                              </div>
+                              <div className="absolute top-3 right-3">
+                                <span className="bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full text-sm font-semibold text-gray-900">
+                                  {priceLabel}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="p-4">
+                              <div className="flex items-center justify-between mb-2">
                                 <span className="text-xs font-medium text-green-600">
-                                  {item.availability || "Available"}
+                                  {item.category}
                                 </span>
+                                <span
+                                  className={`text-xs font-medium ${conditionClass}`}
+                                >
+                                  {item.condition}
+                                </span>
+                              </div>
+                              <h3 className="text-sm font-semibold text-gray-900 mb-2 line-clamp-2">
+                                {item.title}
+                              </h3>
+                              <p className="text-xs text-gray-600 mb-3 line-clamp-2">
+                                {item.description}
+                              </p>
+                              <div className="flex items-center justify-between text-xs text-gray-500">
+                                <div className="flex items-center space-x-1">
+                                  <User className="w-4 h-4" />
+                                  <span>
+                                    {item.postedBy
+                                      ? `${item.postedBy.firstName} ${item.postedBy.lastName}`
+                                      : "Anonymous"}
+                                  </span>
+                                </div>
+                                <span>
+                                  {new Date(
+                                    item.createdAt,
+                                  ).toLocaleDateString()}
+                                </span>
+                              </div>
+                              <div className="mt-2 pt-2 border-t border-gray-100">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-xs text-gray-500">
+                                    {item.meetingLocation || "Campus"}
+                                  </span>
+                                  <span className="text-xs font-medium text-green-600">
+                                    {item.availability || "Available"}
+                                  </span>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
                         </Link>
                       );
                     })}
@@ -401,7 +425,9 @@ const filteredItems = items
                   {filteredItems.length > visibleCount && (
                     <div className="text-center mt-8">
                       <button
-                        onClick={() => setVisibleCount((prev) => prev + ITEMS_PER_PAGE)}
+                        onClick={() =>
+                          setVisibleCount((prev) => prev + ITEMS_PER_PAGE)
+                        }
                         disabled={visibleCount >= filteredItems.length}
                         className="bg-green-600 text-white px-8 py-3 rounded-lg hover:bg-green-700 transition-colors font-medium cursor-pointer"
                       >

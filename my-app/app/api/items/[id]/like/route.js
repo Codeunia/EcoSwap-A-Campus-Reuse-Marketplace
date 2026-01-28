@@ -32,11 +32,11 @@ export async function PATCH(req, { params }) {
     let liked;
 
     if (index > -1) {
-      // ✅ UNLIKE
+      // UNLIKE
       item.likes.splice(index, 1);
       liked = false;
     } else {
-      // ✅ LIKE
+      // LIKE
       item.likes.push(user._id);
       liked = true;
     }
@@ -45,7 +45,7 @@ export async function PATCH(req, { params }) {
 
     return NextResponse.json({
       liked,
-      likes: item.likes, // ⭐ important
+      likes: item.likes,
     });
   } catch (err) {
     console.error("LIKE ERROR:", err);

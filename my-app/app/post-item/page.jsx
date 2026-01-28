@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
+import axios from "@/lib/axios";
 import toast from "react-hot-toast";
 import { RiArrowDownSLine, RiImageAddLine } from "react-icons/ri";
 import Footer from "../../components/Footer";
@@ -18,6 +18,7 @@ const PostItem = () => {
   const [uploadedUrls, setUploadedUrls] = useState([]);
   const [listingType, setListingType] = useState("sell");
   const [contactMethod, setContactMethod] = useState("message");
+  const [description, setDescription] = useState("");
 
   const handleImageUpload = async (files) => {
     const urls = [];
@@ -49,7 +50,7 @@ const PostItem = () => {
       // Build JSON payload
       const itemData = {
         title: e.target.title.value,
-        description: e.target.description.value,
+        description ,
         category: e.target.category.value,
         condition: e.target.condition.value,
         type: listingType,
@@ -123,13 +124,15 @@ const PostItem = () => {
                   </label>
                   <textarea
                     name="description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
                     placeholder="Describe your item, its condition, and any important details..."
                     rows="5"
                     maxLength="500"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm resize-none"
                     required
                   ></textarea>
-                  <p className="text-xs text-gray-500 mt-1">0/500 characters</p>
+                  <p className="text-xs text-gray-500 mt-1">{description.length}/500 characters</p>
                 </div>
 
                 {/* Category */}
@@ -149,8 +152,8 @@ const PostItem = () => {
                     <option value="Kitchen Items">Kitchen Items</option>
                     <option value="Stationery">Stationery</option>
                     <option value="Home Decor">Home Decor</option>
-                    <option value="Appliances">Appliances</option>
-                    <option value="Academic">Academic</option>
+                    <option value="Grocery">Grocery</option>
+                    <option value="Sports">Sports</option>
                   </select>
                 </div>
 
