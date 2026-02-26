@@ -2,13 +2,16 @@ import mongoose from "mongoose";
 
 const MONGODB_URI = process.env.MONGODB_URI;
 
-if (!MONGODB_URI) {
-  throw new Error("Please add MONGODB_URI in your .env file");
-}
-
 let isConnected = false;
 
 export default async function connectDB() {
+  if (!MONGODB_URI) {
+    console.warn(
+      "MONGODB_URI is not set. Skipping DB connection.\nSet MONGODB_URI in your environment (Vercel dashboard) to connect at runtime."
+    );
+    return;
+  }
+
   if (isConnected) return;
 
   try {
