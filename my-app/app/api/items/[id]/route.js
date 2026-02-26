@@ -9,7 +9,7 @@ export async function GET(req, { params }) {
 
     const item = await Item.findById(id).populate(
       "postedBy",
-      "firstName lastName email createdAt"
+      "firstName lastName email createdAt college"
     );
 
     if (!item) {

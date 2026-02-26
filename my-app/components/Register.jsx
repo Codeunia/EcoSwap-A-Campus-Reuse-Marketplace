@@ -1,18 +1,26 @@
-"use client"; 
+"use client";
 import { useState } from "react";
-import { RiUserLine, RiAdminLine, RiMailLine, RiPhoneLine, RiLockLine, RiEyeLine, RiEyeOffLine } from "react-icons/ri";
-import Link from "next/link"; 
-import axios from "axios"; 
-import { useRouter } from "next/navigation"; 
-import toast from "react-hot-toast";  
+import {
+  RiUserLine,
+  RiAdminLine,
+  RiMailLine,
+  RiPhoneLine,
+  RiLockLine,
+  RiEyeLine,
+  RiEyeOffLine,
+} from "react-icons/ri";
+import Link from "next/link";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import { useAuth } from "../context/AuthContext";
 
 export default function RegisterForm() {
-  const router = useRouter(); 
+  const router = useRouter();
   const [accountType, setAccountType] = useState("user");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const { login } = useAuth(); 
+  const { login } = useAuth();
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -48,11 +56,10 @@ export default function RegisterForm() {
       toast.success("User registered successfully 🎉");
 
       if (accountType === "user") {
-        router.push("/home");  // home
+        router.push("/home"); // home
       } else {
-        router.push("/dashboard");  // admin dashboard
+        router.push("/dashboard"); // admin dashboard
       }
-
     } catch (error) {
       setMessage(error.response?.data?.message || "Something went wrong");
       toast.error("Registration failed");
@@ -68,7 +75,9 @@ export default function RegisterForm() {
               <RiUserLine className="text-white text-2xl" />
             </div>
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Join EcoSwap</h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">
+            Join EcoSwap
+          </h2>
           <p className="text-gray-600">
             Create your account and start sharing with your campus community
           </p>
@@ -78,7 +87,9 @@ export default function RegisterForm() {
           <form className="space-y-6" onSubmit={handleSubmit}>
             {/* Account Type Toggle */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">Account Type</label>
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                Account Type
+              </label>
               <div className="flex space-x-4">
                 <button
                   type="button"
@@ -114,7 +125,10 @@ export default function RegisterForm() {
             {/* Name Fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="firstName"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   First Name
                 </label>
                 <div className="relative">
@@ -134,7 +148,10 @@ export default function RegisterForm() {
               </div>
 
               <div>
-                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="lastName"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Last Name
                 </label>
                 <div className="relative">
@@ -158,7 +175,10 @@ export default function RegisterForm() {
             {accountType === "user" ? (
               <>
                 <div>
-                  <label htmlFor="collegeEmail" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="collegeEmail"
+                    className="block text-sm font-medium text-gray-700 mb-2"
+                  >
                     College Email Address
                   </label>
                   <div className="relative">
@@ -175,29 +195,40 @@ export default function RegisterForm() {
                       required
                     />
                   </div>
-                  <p className="text-xs text-gray-400 mt-1">Must be a valid college email address</p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Must be a valid college email address
+                  </p>
                 </div>
 
                 <div>
-                  <label htmlFor="college" className="block text-sm font-medium text-gray-700 mb-2">
-                    College/University
-                  </label>
-                  <select
-                    id="college"
-                    name="college"
-                    className="w-full pl-3 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
-                    onChange={handleChange}
-                    required
+                  <label
+                    htmlFor="college"
+                    className="block text-sm font-medium text-gray-700 mb-2"
                   >
-                    <option value="">Select your college...</option>
-                    <option value="college1">College 1</option>
-                    <option value="college2">College 2</option>
-                  </select>
+                    College / University
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center">
+                      <RiUserLine className="text-gray-400" />
+                    </div>
+                    <input
+                      id="college"
+                      name="college"
+                      type="text"
+                      placeholder="Enter your college or university name"
+                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
                 </div>
               </>
             ) : (
               <div>
-                <label htmlFor="adminEmail" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="adminEmail"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Admin Email Address
                 </label>
                 <div className="relative">
@@ -219,7 +250,10 @@ export default function RegisterForm() {
 
             {/* Phone */}
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="phone"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Phone Number (Optional)
               </label>
               <div className="relative">
@@ -240,7 +274,10 @@ export default function RegisterForm() {
             {/* Password */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Password
                 </label>
                 <div className="relative">
@@ -261,13 +298,20 @@ export default function RegisterForm() {
                     className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? <RiEyeOffLine className="text-gray-400 hover:text-gray-600" /> : <RiEyeLine className="text-gray-400 hover:text-gray-600" />}
+                    {showPassword ? (
+                      <RiEyeOffLine className="text-gray-400 hover:text-gray-600" />
+                    ) : (
+                      <RiEyeLine className="text-gray-400 hover:text-gray-600" />
+                    )}
                   </button>
                 </div>
               </div>
 
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Confirm Password
                 </label>
                 <div className="relative">
@@ -288,7 +332,11 @@ export default function RegisterForm() {
                     className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
-                    {showConfirmPassword ? <RiEyeOffLine className="text-gray-400 hover:text-gray-600" /> : <RiEyeLine className="text-gray-400 hover:text-gray-600" />}
+                    {showConfirmPassword ? (
+                      <RiEyeOffLine className="text-gray-400 hover:text-gray-600" />
+                    ) : (
+                      <RiEyeLine className="text-gray-400 hover:text-gray-600" />
+                    )}
                   </button>
                 </div>
               </div>
@@ -304,8 +352,18 @@ export default function RegisterForm() {
                 className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500 mt-1"
                 onChange={handleChange}
               />
-              <label htmlFor="acceptTerms" className="ml-3 text-sm text-gray-700">
-                I agree to the <a href="#" className="text-green-600 hover:text-green-700">Terms of Service</a> and <a href="#" className="text-green-600 hover:text-green-700">Privacy Policy</a>
+              <label
+                htmlFor="acceptTerms"
+                className="ml-3 text-sm text-gray-700"
+              >
+                I agree to the{" "}
+                <a href="#" className="text-green-600 hover:text-green-700">
+                  Terms of Service
+                </a>{" "}
+                and{" "}
+                <a href="#" className="text-green-600 hover:text-green-700">
+                  Privacy Policy
+                </a>
               </label>
             </div>
 
@@ -314,15 +372,19 @@ export default function RegisterForm() {
               type="submit"
               className="w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors font-medium whitespace-nowrap cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {accountType === "user" ? "Create User Account" : "Create Admin Account"}
+              {accountType === "user"
+                ? "Create User Account"
+                : "Create Admin Account"}
             </button>
           </form>
         </div>
 
         <p className="text-center text-sm text-gray-600">
           Already have an account?{" "}
-          <Link href="/login"
-            className="text-green-600 hover:text-green-700 font-medium">
+          <Link
+            href="/login"
+            className="text-green-600 hover:text-green-700 font-medium"
+          >
             Sign in here
           </Link>
         </p>

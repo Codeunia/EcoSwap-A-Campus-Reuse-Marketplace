@@ -43,7 +43,7 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-6">Quick Links</h3>
             <ul className="space-y-3">
-              <li><a className="text-gray-400 hover:text-green-400 transition-colors" href="/browse">Browse Items</a></li>
+              <li><a className="text-gray-400 hover:text-green-400 transition-colors" href="/browse-items">Browse Items</a></li>
               <li><a className="text-gray-400 hover:text-green-400 transition-colors" href="/categories">Categories</a></li>
               <li><a className="text-gray-400 hover:text-green-400 transition-colors" href="/post-item">Post an Item</a></li>
               <li><a className="text-gray-400 hover:text-green-400 transition-colors" href="/how-it-works">How It Works</a></li>
@@ -56,7 +56,7 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-6">Account</h3>
             <ul className="space-y-3">
               <li><a className="text-gray-400 hover:text-green-400 transition-colors" href="/login">Sign In</a></li>
-              <li><a className="text-gray-400 hover:text-green-400 transition-colors" href="/register">Create Account</a></li>
+              <li><a className="text-gray-400 hover:text-green-400 transition-colors" href="/">Create Account</a></li>
               <li><a className="text-gray-400 hover:text-green-400 transition-colors" href="/dashboard">My Dashboard</a></li>
               <li><a className="text-gray-400 hover:text-green-400 transition-colors" href="/profile">Profile Settings</a></li>
               <li><a className="text-gray-400 hover:text-green-400 transition-colors" href="/messages">Messages</a></li>

@@ -292,10 +292,6 @@ const BrowseItems = () => {
                     ))}
                   </div>
                 </div>
-
-                <button className="w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors font-medium whitespace-nowrap cursor-pointer">
-                  Apply Filters
-                </button>
               </div>
             </div>
 
@@ -400,7 +396,7 @@ const BrowseItems = () => {
                               <div className="mt-2 pt-2 border-t border-gray-100">
                                 <div className="flex items-center justify-between">
                                   <span className="text-xs text-gray-500">
-                                    {item.meetingLocation || "Campus"}
+                                    {item.postedBy?.college || "Campus"}
                                   </span>
                                   <span className="text-xs font-medium text-green-600">
                                     {item.availability || "Available"}

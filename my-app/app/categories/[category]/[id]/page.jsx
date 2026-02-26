@@ -143,7 +143,7 @@ export default function ItemDetailsPage({ params }) {
                   <div className="flex gap-4 text-sm text-gray-600">
                     <span className="flex items-center">
                       <MapPin className="w-4 h-4 mr-1" />
-                      {item.meetingLocation || "Campus"}
+                      {item.postedBy?.college || "Campus"}
                     </span>
                     <span className="flex items-center">
                       <Clock className="w-4 h-4 mr-1" />
@@ -179,7 +179,7 @@ export default function ItemDetailsPage({ params }) {
                   <Heart
                     className={`w-6 h-6 ${
                       liked ? "fill-red-500 text-red-500" : "text-gray-400"
-                    }`}
+                    } cursor-pointer`}
                   />
                   <span>{item.likes?.length || 0}</span>
                 </button>
@@ -221,7 +221,7 @@ export default function ItemDetailsPage({ params }) {
                 {item.type === "sell" && (
                   <button
                     onClick={() => router.push(`/checkout/${item._id}`)}
-                    className="w-full py-4 bg-black text-white rounded-xl font-semibold"
+                    className="w-full py-4 bg-black text-white rounded-xl font-semibold cursor-pointer"
                   >
                     Pay Seller Securely
                   </button>
@@ -229,14 +229,14 @@ export default function ItemDetailsPage({ params }) {
 
                 <button
                   onClick={() => router.push(`/checkout/${item._id}`)}
-                  className="w-full py-4 bg-emerald-600 text-white rounded-xl font-semibold"
+                  className="w-full py-4 bg-emerald-600 text-white rounded-xl font-semibold cursor-pointer"
                 >
                   <MessageCircle className="inline w-5 h-5 mr-2" />
                   Contact Seller
                 </button>
 
                 {item.type === "swap" && (
-                  <button className="w-full py-3 border-2 border-emerald-600 text-emerald-600 rounded-xl">
+                  <button className="w-full py-3 border-2 border-emerald-600 text-emerald-600 rounded-xl cursor-pointer">
                     <Repeat className="inline w-5 h-5 mr-2" />
                     Propose Exchange
                   </button>
@@ -307,7 +307,7 @@ export default function ItemDetailsPage({ params }) {
                     setReviewText("");
                     setRating(0);
                   }}
-                  className="mt-2 bg-emerald-600 text-white px-6 py-2 rounded-lg"
+                  className="mt-2 bg-emerald-600 text-white px-6 py-2 rounded-lg cursor-pointer"
                 >
                   Submit Review
                 </button>

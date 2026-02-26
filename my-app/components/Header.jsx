@@ -70,19 +70,19 @@ export default function Header() {
           <nav className="hidden md:flex items-center space-x-8">
             <button
               onClick={(e) => handleProtectedClick(e, "/browse-items")}
-              className="text-gray-700 hover:text-green-600 transition-colors"
+              className="text-gray-700 hover:text-green-600 transition-colors cursor-pointer"
             >
               Browse Items
             </button>
             <button
               onClick={(e) => handleProtectedClick(e, "/categories")}
-              className="text-gray-700 hover:text-green-600 transition-colors"
+              className="text-gray-700 hover:text-green-600 transition-colors cursor-pointer"
             >
               Categories
             </button>
             <button
               onClick={(e) => handleProtectedClick(e, "/how-it-works")}
-              className="text-gray-700 hover:text-green-600 transition-colors"
+              className="text-gray-700 hover:text-green-600 transition-colors cursor-pointer"
             >
               How It Works
             </button>
@@ -124,7 +124,7 @@ export default function Header() {
                         toast.success("Logged out successfully");
                         router.push("/login");
                       }}
-                      className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100 rounded-lg"
+                      className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100 rounded-lg cursor-pointer"
                     >
                       Logout
                     </button>

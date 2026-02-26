@@ -49,7 +49,7 @@ export async function GET(req) {
     }
 
     const items = await Item.find(filter)
-    .populate("postedBy", "firstName lastName email")
+    .populate("postedBy", "firstName lastName email college")
     .sort({ createdAt: -1 })
     .limit(limit ? Number(limit) : 0);
 

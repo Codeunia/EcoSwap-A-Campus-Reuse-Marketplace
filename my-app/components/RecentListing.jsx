@@ -58,7 +58,7 @@ const ListingsSection = () => {
         <div className="text-center mt-12">
           <button
             onClick={() => router.push("/browse-items")}
-            className="bg-green-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-green-700 transition-colors"
+            className="bg-green-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-green-700 transition-colors cursor-pointer"
           >
             View All Listings
           </button>

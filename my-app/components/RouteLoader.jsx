@@ -14,7 +14,7 @@ export default function RouteLoader() {
 
     const timeout = setTimeout(() => {
       setLoading(false);
-    }, 400); // smooth delay
+    }, 200); // smooth delay
 
     return () => clearTimeout(timeout);
   }, [pathname, searchParams]);
