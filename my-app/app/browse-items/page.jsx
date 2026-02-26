@@ -5,7 +5,10 @@ import axios from "@/lib/axios";
 import { Search, Grid, List, User } from "lucide-react";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import { useSearchParams } from "next/navigation";
+// `useSearchParams` from next/navigation caused build errors during prerendering of the 404 page
+// because it is a client-only hook invoked outside of a suspense boundary.  
+// We'll parse the URL manually inside a client-side effect instead.
+
 import Loader from "../../components/Loader";
 
 // Filter options
@@ -111,10 +114,11 @@ const BrowseItems = () => {
       return 0;
     });
 
-  const searchParams = useSearchParams();
-  const categoryFromURL = searchParams.get("category");
-
+  // parse query string manually on the client to avoid using
+  // `useSearchParams`, which triggers build-time errors in Next 15
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const categoryFromURL = params.get("category");
     if (categoryFromURL) {
       setSelectedCategory(
         categories.find(
@@ -122,7 +126,8 @@ const BrowseItems = () => {
         ) || "",
       );
     }
-  }, [categoryFromURL]);
+  }, []);
+
 
   return (
     <>
